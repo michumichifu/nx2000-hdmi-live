@@ -98,7 +98,17 @@ off **without** the cable and on again. If it does not power off, remove the bat
 - mewlips' remote controller mod;
 - [atsidaev/samsung-nx-kernel](https://github.com/atsidaev/samsung-nx-kernel).
 
-Reverse engineering done with the help of Claude (Anthropic) by [@michumichifu](https://github.com/michumichifu).
+### How it was done
+
+All the reverse engineering, by [@michumichifu](https://github.com/michumichifu), was done with AI, using
+**[Claude Code](https://claude.com/claude-code) (CLI) with Claude Opus 5.5 at *max* effort**:
+- disassembling the camera program;
+- reading the kernel sources;
+- poking registers over Telnet;
+- testing live with the capture card.
+
+We started at *high* effort and lost a couple of hours going in circles. Switching to *max* is when the results
+came: slower per step, but it got there.
 
 **No warranty.** It works on our NX2000 with firmware 1.18. It patches the running camera program in memory, and a
 wrong step can hang the camera until you pull the battery. Use at your own risk.
@@ -127,5 +137,9 @@ capturadora HDMI USB. Sirve para transmitir con OBS.
 - Un script en la cámara (`espejo-mem.pl`) pone en la salida HDMI la imagen en vivo horizontal, con paso doble
   porque la salida es entrelazada.
 - La laptop recorta y agranda esa imagen.
+
+**Cómo se hizo:** con inteligencia artificial, usando **Claude Code (CLI) con Claude Opus 5.5 en esfuerzo *max***.
+Empezamos en esfuerzo *high* y perdimos un par de horas. Al pasar a *max* empezaron los resultados: tarda un poco más,
+pero llegó.
 
 Los detalles, más arriba en inglés. Sin garantía: probado en una NX2000 con firmware 1.18.
