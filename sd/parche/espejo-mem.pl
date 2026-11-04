@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Espejo de la vista en vivo en la salida HDMI SIN leer registros (4 nov 2026). Herramienta de Claude; corre en la cámara.
+# Espejo de la vista en vivo en la salida HDMI SIN leer registros. Herramienta de Claude; corre en la cámara.
 #
 # Igual que espejo.pl, pero para cuando la pantalla trasera está apagada (parche 5: la cámara la apaga para poder
 # encender el HDMI sin que se caiga Xorg). Con la pantalla apagada no se leen sus registros (podría colgar la cámara),
@@ -20,7 +20,7 @@ my $TH  = $ARGV[1] || 1080;
 my $W   = $ARGV[2] || 720;
 my $H   = $ARGV[3] || 480;
 my $DUR = $ARGV[4] || 0;
-my $ENT = $ARGV[5] || 1;   # 2 = salida entrelazada: la ventana salta de dos en dos líneas (4 nov, ~12:30: con 1 se veía la mitad de arriba estirada al doble)
+my $ENT = $ARGV[5] || 1;   # 2 = salida entrelazada: la ventana salta de dos en dos líneas (con 1 se ve la mitad de arriba estirada al doble)
 my ($HBASE, $HSEP, $HPASO, $HFILAS) = (0xc74fa000, 0x8e000, 800, 482);
 
 open(my $L, ">>", "/mnt/mmc/registros/espejo.txt") or die "registro: $!";
@@ -45,7 +45,7 @@ my ($yd, $cd) = direcciones(0);
 my $px = int(($TW - $W) / 4) * 2; my $py = int(($TH - $H) / 2);
 my $r = io(57, pack("V5 v x2 V2 V2 V4 V4", 0, 1, 0, 0, 1, $HPASO * $ENT, $W, $H, 4, 0, $yd, $yd + $HPASO, $cd, $cd + $HPASO, $px, $W, $py, $H));
 log_ sprintf("inicio: imagen %dx%d en (%d,%d) de %dx%d, paso %d: %s", $W, $H, $px, $py, $TW, $TH, $HPASO * $ENT, defined $r ? "ok" : "fallo $!");
-log_ "ventana de vídeo 0 de la TV: " . (defined io(56, pack("LL", 0, 1)) ? "encendida" : "fallo $!");   # TV_VID_WINDOW_ONOFF (sin esto, negro: 4 nov, ~11:53)
+log_ "ventana de vídeo 0 de la TV: " . (defined io(56, pack("LL", 0, 1)) ? "encendida" : "fallo $!");   # TV_VID_WINDOW_ONOFF (sin esto, negro)
 log_ "capas: gráficos de la TV " . (defined io(66, pack("L", 0)) ? "apagados" : "fallo $!")
    . ", vídeo encima " . (defined io(62, pack("L", 0)) ? "ok" : "fallo $!");
 

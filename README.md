@@ -9,8 +9,9 @@ with OBS.
 Stock NX2000 firmware only uses HDMI to show the photo gallery: when you plug the cable in photo mode it jumps to
 playback. This project gets the **live view** out of it instead.
 
-**Result (Nov 2026):** full framing, correct aspect ratio and colors, smooth (~24–30 fps), ~0.5–1 s latency, no
-tearing. **Continuous autofocus works live with the lens AF/MF switch set to AF.**
+**Result:** full framing, correct aspect ratio and colors, smooth (~24–30 fps), ~0.5–1 s latency, no tearing.
+Continuous autofocus works live with the lens AF/MF switch set to AF. It keeps driving the focus motor all the time,
+which drains the battery, so **the goal is manual focus with the lens ring** (see To do).
 
 **Limits:**
 - DVD-like quality: the source is the 720×480 live-view buffer;
@@ -84,7 +85,8 @@ off **without** the cable and on again. If it does not power off, remove the bat
 
 ## To do
 
-- Manual focus with the ring.
+- Manual focus with the lens ring, to avoid continuous AF and save battery. In demo mode the ring does not respond
+  yet: on NX lenses the ring only sends a signal that the camera program has to act on.
 - HD: the 1920×1080 frames exist, but in an internal compressed format (format 4) that the TV window does not show
   as is.
 - Clean power-off from demo mode.
@@ -121,7 +123,8 @@ wrong step can hang the camera until you pull the battery. Use at your own risk.
 capturadora HDMI USB. Sirve para transmitir con OBS.
 
 **Resultado:** encuadre completo, proporciones y colores correctos, fluido, con 0,5–1 s de retraso.
-- Enfoque automático continuo con la lente en **AF**.
+- Enfoque automático continuo con la lente en **AF**. Funciona, pero mueve el motor sin parar y gasta batería: el
+  objetivo es el **enfoque manual con el anillo** (pendiente).
 - Límites: calidad de DVD (720×480), la pantalla de la cámara queda en negro, el anillo de enfoque manual no
   responde y gasta mucha batería.
 

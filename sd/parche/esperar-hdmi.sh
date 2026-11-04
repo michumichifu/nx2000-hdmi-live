@@ -1,5 +1,5 @@
 #!/bin/sh
-# Herramienta de Claude (4 nov 2026; versión para el arranque, ~12:30 p. m.).
+# Herramienta de Claude (versión para el arranque).
 # Con la demo en 2D (hdmidemo.adj + parche 6), al conectar el micro HDMI la cámara enciende ella misma la salida
 # ("hdmi_w", "Mode change succeeded"). Este vigilante espera ese momento en el registro del programa y arranca
 # espejo-mem.pl con el tamaño de salida que eligió la cámara ("Selected index N : WxH") y la imagen de vídeo entera
