@@ -14,10 +14,16 @@ dlogutil -v time -f /mnt/mmc/registros/arranque-$n-dlog.txt &
 # Waits for the HDMI connection and starts the mirror / espera el HDMI y arranca el espejo
 [ -e /mnt/mmc/parche/demo-2d ] && sh /mnt/mmc/parche/esperar-hdmi.sh &
 
-# Optional: Telnet/FTP and Wi-Fi from hunkreborn's mod (only useful for debugging; costs battery).
-# Opcional: Telnet/FTP y Wi-Fi del mod de hunkreborn (solo para depurar; gasta batería).
-# mkdir -p /dev/pts
-# mount -t devpts none /dev/pts
-# inetd /mnt/mmc/inetd.conf
-# /mnt/mmc/remote/start.sh
-# /mnt/mmc/remote/connect.sh
+# OPTIONAL: Wi-Fi + Telnet/FTP at boot, to iterate and debug (for example with an AI agent). Enable it by creating an
+# empty file parche/wifi-telnet. Needs hunkreborn's package (remote/ = mewlips' nx-remote-controller-mod, which
+# joins the Wi-Fi network saved in the camera) and inetd.conf. Telnet is root WITHOUT password and FTP exposes the
+# SD card: use it only on a trusted network. It also costs battery.
+# OPCIONAL: Wi-Fi + Telnet/FTP al arrancar, para iterar y depurar (por ejemplo con un agente de IA). Se activa
+# creando el archivo vacío parche/wifi-telnet. Telnet entra como root SIN clave: solo en una red de confianza.
+if [ -e /mnt/mmc/parche/wifi-telnet ]; then
+  mkdir -p /dev/pts
+  mount -t devpts none /dev/pts
+  inetd /mnt/mmc/inetd.conf
+  /mnt/mmc/remote/start.sh
+  /mnt/mmc/remote/connect.sh
+fi

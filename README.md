@@ -57,7 +57,8 @@ which drains the battery, so **the goal is manual focus with the lens ring** (se
 Copy the contents of `sd/` to the root of the SD card, next to hunkreborn's `nx_cs.adj`:
 - `autoexec.sh`;
 - `hdmidemo.adj` (empty);
-- `parche/` (scripts plus the two empty flag files `demo-2d` and `ignorar-desconexion`).
+- `parche/` (scripts plus the two empty flag files `demo-2d` and `ignorar-desconexion`);
+- `inetd.conf` (only used by the optional Wi-Fi + Telnet, see below).
 
 ## Use (order matters)
 
@@ -69,6 +70,39 @@ Copy the contents of `sd/` to the root of the SD card, next to hunkreborn's `nx_
 
 Closing and reopening the laptop window while the cable is plugged is fine. To get the normal camera back, power it
 off **without** the cable and on again. If it does not power off, remove the battery.
+
+## Iterating with an AI agent (optional Wi-Fi + Telnet)
+
+This live view was found by iterating with an AI coding agent: it changes something on the camera, reads the logs
+and looks at what reaches the capture card, then tries again. To work the same way:
+
+1. **Enable Wi-Fi + Telnet at boot.** Create an empty file `parche/wifi-telnet` on the SD card.
+   - You also need hunkreborn's package: `remote/` (mewlips' remote controller mod, which joins the Wi-Fi network
+     saved in the camera) and `inetd.conf` in the SD root (included in `sd/`).
+   - Connect the camera to your Wi-Fi once from its own menu so the network is saved.
+   - ⚠️ Telnet gives root **without password** and FTP exposes the SD card: only on a trusted network. Remove the flag
+     file when you are done (it also saves battery).
+2. **Find the camera:** check your router, or ping the subnet and test port 23.
+3. **Give the agent these tools:**
+   - `python3 tools/nxtel.py <ip> "<command; command>" [seconds]` runs commands (bash on the camera) and prints the
+     output. Many systems no longer have a `telnet` client.
+   - FTP for files: `curl ftp://<ip>/<path>` downloads and `curl -T file ftp://<ip>/<path>` uploads (the root is
+     the SD card).
+   - Logs on the SD card, in `registros/`:
+     - `arranque-N-dlog.txt`, the camera program log for each boot. It shows, for example, "Mode change succeeded"
+       and "hdmi_w";
+     - `parche-memoria.txt`, with the bytes before and after each patch;
+     - `esperar-hdmi.txt` and `espejo.txt`.
+   - The capture card on the laptop, to "see" the output: `ffmpeg -f v4l2 -input_format mjpeg -video_size 1920x1080
+     -i /dev/videoN -frames:v 3 -update 1 frame.jpg` (color bars = no signal; black = signal, no image). Remember
+     the hot-plug rule above: while a viewer is open, use that viewer's frames instead of reopening the card.
+4. **Rules that saved hours:**
+   - Read only documented registers, one at a time: `busybox devmem <address>`.
+   - Never scan register ranges: it hangs the camera until you pull the battery.
+   - The camera program is always pid 270 (it boots from hibernation).
+   - Patch RAM through `/proc/270/mem`, and check the original bytes before writing.
+   - Use `/proc/*/cmdline` instead of `ps`, which truncates names.
+   - Map `/dev/mem` with `O_SYNC` (see `espejo-mem.pl`) to read frames that the hardware writes.
 
 ## Findings that may help others
 
@@ -140,6 +174,14 @@ capturadora HDMI USB. Sirve para transmitir con OBS.
 - Un script en la cámara (`espejo-mem.pl`) pone en la salida HDMI la imagen en vivo horizontal, con paso doble
   porque la salida es entrelazada.
 - La laptop recorta y agranda esa imagen.
+
+**Para iterar con un agente de IA:**
+- se puede encender Wi-Fi + Telnet/FTP al arrancar, creando el archivo vacío `parche/wifi-telnet` (necesita el
+  paquete de hunkreborn);
+- el agente da órdenes con `tools/nxtel.py`, lee los registros de `registros/` en la SD y mira la capturadora con
+  `ffmpeg`;
+- Telnet entra como root sin clave: solo en una red de confianza;
+- reglas que ahorran horas: en la sección "Iterating with an AI agent".
 
 **Cómo se hizo:** con inteligencia artificial, usando **Claude Code (CLI) con Claude Opus 5.5 en esfuerzo *max***.
 Empezamos en esfuerzo *high* y perdimos un par de horas. Al pasar a *max* empezaron los resultados: tarda un poco más,
